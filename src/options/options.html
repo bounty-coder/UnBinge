@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Unbinge Setup</title>
+    <link rel="stylesheet" href="/src/options/options.css">
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">Unbinge</p>
+      <h1>First-time setup</h1>
+      <p>Select the profile that should be enforced by default. The extension uses the safest Kids profile until setup is complete.</p>
+      <div class="choices">
+        <button data-age="kids" type="button">Kids ≤8</button>
+        <button data-age="teens" type="button">Teens 9-14</button>
+        <button data-age="adult" type="button">Adult/Parent</button>
+      </div>
+      <p id="status" role="status"></p>
+    </main>
+    <script type="module" src="/src/options/options.ts"></script>
+  </body>
+</html>

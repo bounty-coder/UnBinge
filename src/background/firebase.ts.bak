@@ -1,0 +1,257 @@
+// firebase.ts is kept as a rollback reference only.
+// Active backend is now api.ts (PHP/MySQL via unbinge.watch).
+// The imports below are commented out because the Firebase constants
+// were removed from constants.ts when migrating to the PHP backend.
+//
+// import {
+//   FIREBASE_DATABASE_ID,
+//   FIREBASE_PROJECT_ID,
+//   FIREBASE_WEB_API_KEY,
+//   FIRESTORE_COLLECTIONS,
+//   isFirestoreConfigured
+// } from "../shared/constants";
+import type {
+  AgeCategory,
+  ChannelRequestPayload,
+  WhitelistChannel
+  // WhitelistVideo // disabled in v1 — see fetchApprovedVideos note below
+} from "../shared/types";
+
+type FirestoreValue = {
+  stringValue?: string;
+  integerValue?: string;
+  doubleValue?: number;
+  booleanValue?: boolean;
+  timestampValue?: string;
+  arrayValue?: {
+    values?: FirestoreValue[];
+  };
+};
+
+type FirestoreDocument = {
+  name: string;
+  fields?: Record<string, FirestoreValue>;
+};
+
+type RunQueryResponse = {
+  document?: FirestoreDocument;
+};
+
+export async function fetchApprovedChannels(
+  ageCategory: AgeCategory,
+  languages: string[]
+): Promise<WhitelistChannel[]> {
+  ensureFirestoreConfigured();
+
+  const rows = await runCollectionQuery(FIRESTORE_COLLECTIONS.whitelistChannels, [
+    fieldEquals("status", "approved"),
+    fieldArrayContains("ageCategories", ageCategory)
+  ]);
+
+  return rows
+    .map(documentToChannel)
+    .filter(channel => channel.status === "approved")
+    .filter(channel => matchesLanguages(channel.languages, languages));
+}
+
+// whitelist_videos is not supported in v1 — only whitelist_channels is used.
+// To re-enable video whitelisting later, uncomment fetchApprovedVideos and
+// documentToVideo below, plus the corresponding code in whitelist-cache.ts and
+// access-control.ts.
+// export async function fetchApprovedVideos(
+//   ageCategory: AgeCategory,
+//   languages: string[]
+// ): Promise<WhitelistVideo[]> {
+//   ensureFirestoreConfigured();
+//
+//   const rows = await runCollectionQuery(FIRESTORE_COLLECTIONS.whitelistVideos, [
+//     fieldEquals("status", "approved"),
+//     fieldArrayContains("ageCategories", ageCategory)
+//   ]);
+//
+//   return rows
+//     .map(documentToVideo)
+//     .filter(video => video.status === "approved")
+//     .filter(video => matchesLanguages(video.languages, languages));
+// }
+
+export async function submitChannelRequest(payload: ChannelRequestPayload): Promise<void> {
+  ensureFirestoreConfigured();
+
+  const body = {
+    fields: {
+      submittedInput: stringField(payload.submittedInput),
+      normalizedUrl: stringField(payload.normalizedUrl ?? ""),
+      channelId: stringField(payload.channelId ?? ""),
+      handle: stringField(payload.handle ?? ""),
+      title: stringField(payload.title ?? ""),
+      requestedAgeCategory: stringField(payload.requestedAgeCategory),
+      requestedLanguages: arrayField(payload.requestedLanguages),
+      requestReason: stringField(payload.requestReason ?? ""),
+      source: stringField(payload.source),
+      localApproval: booleanField(payload.localApproval),
+      status: stringField("pending_review"),
+      extensionVersion: stringField(chrome.runtime.getManifest().version),
+      createdAt: timestampField(new Date())
+    }
+  };
+
+  const response = await fetch(
+    firestoreUrl(`documents/${FIRESTORE_COLLECTIONS.requestedChannels}`),
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(body)
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(`Failed to submit channel request: ${response.status}`);
+  }
+}
+
+export function getFirestoreConfigurationError(): string | null {
+  return isFirestoreConfigured()
+    ? null
+    : "Configure FIREBASE_PROJECT_ID and FIREBASE_WEB_API_KEY in src/shared/constants.ts.";
+}
+
+async function runCollectionQuery(
+  collectionId: string,
+  filters: Record<string, unknown>[]
+): Promise<FirestoreDocument[]> {
+  const response = await fetch(firestoreUrl("documents:runQuery"), {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      structuredQuery: {
+        from: [{ collectionId }],
+        where: {
+          compositeFilter: {
+            op: "AND",
+            filters
+          }
+        }
+      }
+    })
+  });
+
+  if (!response.ok) {
+    throw new Error(`Firestore query failed for ${collectionId}: ${response.status}`);
+  }
+
+  const rows = (await response.json()) as RunQueryResponse[];
+  return rows.map(row => row.document).filter((document): document is FirestoreDocument => Boolean(document));
+}
+
+function documentToChannel(document: FirestoreDocument): WhitelistChannel {
+  const fields = document.fields ?? {};
+
+  return {
+    channelId: stringValue(fields.channelId) || document.name.split("/").pop() || "",
+    handle: stringValue(fields.handle) || undefined,
+    title: stringValue(fields.title) || "Approved channel",
+    languages: arrayValue(fields.languages),
+    ageCategories: arrayValue(fields.ageCategories) as AgeCategory[],
+    status: "approved",
+    badge: "global_verified",
+    updatedAt: timestampToMillis(fields.updatedAt)
+  };
+}
+
+// whitelist_videos disabled in v1 — see note above.
+// function documentToVideo(document: FirestoreDocument): WhitelistVideo {
+//   const fields = document.fields ?? {};
+//
+//   return {
+//     videoId: stringValue(fields.videoId) || document.name.split("/").pop() || "",
+//     channelId: stringValue(fields.channelId) || undefined,
+//     title: stringValue(fields.title) || undefined,
+//     languages: arrayValue(fields.languages),
+//     ageCategories: arrayValue(fields.ageCategories) as AgeCategory[],
+//     status: "approved"
+//   };
+// }
+
+function fieldEquals(fieldPath: string, value: string): Record<string, unknown> {
+  return {
+    fieldFilter: {
+      field: { fieldPath },
+      op: "EQUAL",
+      value: stringField(value)
+    }
+  };
+}
+
+function fieldArrayContains(fieldPath: string, value: string): Record<string, unknown> {
+  return {
+    fieldFilter: {
+      field: { fieldPath },
+      op: "ARRAY_CONTAINS",
+      value: stringField(value)
+    }
+  };
+}
+
+function firestoreUrl(path: string): string {
+  const encodedKey = encodeURIComponent(FIREBASE_WEB_API_KEY);
+  const databaseId = encodeURIComponent(FIREBASE_DATABASE_ID);
+  return `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT_ID}/databases/${databaseId}/${path}?key=${encodedKey}`;
+}
+
+function ensureFirestoreConfigured(): void {
+  const error = getFirestoreConfigurationError();
+
+  if (error) {
+    throw new Error(error);
+  }
+}
+
+function matchesLanguages(channelLanguages: string[], selectedLanguages: string[]): boolean {
+  if (selectedLanguages.length === 0 || channelLanguages.length === 0) {
+    return true;
+  }
+
+  return channelLanguages.some(language => selectedLanguages.includes(language));
+}
+
+function stringField(value: string): FirestoreValue {
+  return { stringValue: value };
+}
+
+function booleanField(value: boolean): FirestoreValue {
+  return { booleanValue: value };
+}
+
+function timestampField(value: Date): FirestoreValue {
+  return { timestampValue: value.toISOString() };
+}
+
+function arrayField(values: string[]): FirestoreValue {
+  return {
+    arrayValue: {
+      values: values.map(stringField)
+    }
+  };
+}
+
+function stringValue(value: FirestoreValue | undefined): string {
+  return value?.stringValue ?? "";
+}
+
+function arrayValue(value: FirestoreValue | undefined): string[] {
+  return value?.arrayValue?.values?.flatMap(item => (item.stringValue ? [item.stringValue] : [])) ?? [];
+}
+
+function timestampToMillis(value: FirestoreValue | undefined): number | undefined {
+  if (!value?.timestampValue) {
+    return undefined;
+  }
+
+  const parsed = Date.parse(value.timestampValue);
+  return Number.isNaN(parsed) ? undefined : parsed;
+}

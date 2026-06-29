@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Unbinge</title>
+    <link rel="stylesheet" href="/src/popup/popup.css">
+  </head>
+  <body>
+    <main class="app">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">UnBinge</p>
+          <h1>Education mode</h1>
+        </div>
+        <label class="theme-switch" title="Switch between light and dark mode">
+          <input id="theme-toggle" type="checkbox">
+          <span class="theme-icon sun" aria-hidden="true">☀️</span>
+          <span class="theme-track"></span>
+          <span class="theme-icon moon" aria-hidden="true">🌙</span>
+        </label>
+      </header>
+
+      <section id="onboarding" class="card onboarding" hidden>
+        <h2>Choose age category</h2>
+        <p>Safe defaults are applied based on this profile. You can change it later.</p>
+        <div class="segmented">
+          <button data-age="kids" type="button">Kids ≤8</button>
+          <button data-age="teens" type="button">Teens 9-14</button>
+          <button data-age="adult" type="button">Adult/Parent</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <label class="setting">
+          <span>
+            <strong>YouTube for Education</strong>
+            <small>Only approved channels and videos are allowed.</small>
+          </span>
+          <input data-setting="educationModeEnabled" type="checkbox">
+        </label>
+        <!-- Ad Blocker hidden for v1 — feature disabled until it works reliably.
+             To re-enable: uncomment this block, restore updateAdBlocking() in
+             src/background/dnr.ts, and set adBlockEnabled: true in src/shared/defaults.ts.
+        <label class="setting">
+          <span>
+            <strong>Ad Blocker</strong>
+            <small>Uses optimized MV3 declarative rules.</small>
+          </span>
+          <input data-setting="adBlockEnabled" type="checkbox">
+        </label>
+        -->
+        <label class="field">
+          <span>Age category</span>
+          <select id="age-category">
+            <option value="kids">Kids ≤8</option>
+            <option value="teens">Teens 9-14</option>
+            <option value="adult">Adult/Parent</option>
+          </select>
+        </label>
+      </section>
+
+      <details class="card">
+        <summary>Distraction settings</summary>
+        <div class="master-row">
+          <label class="master-toggle">
+            <input id="distraction-master" type="checkbox">
+            <span>
+              <strong>Use distraction settings</strong>
+              <small>When off, YouTube UI filtering is disabled.</small>
+            </span>
+          </label>
+          <button id="reset-distractions" class="secondary" type="button">Reset defaults</button>
+        </div>
+        <div id="filter-list" class="filter-list"></div>
+      </details>
+
+      <details class="card" id="local-approval-panel">
+        <summary>Approve channels locally</summary>
+        <p class="muted">Parent-approved channels open on this browser immediately and are reported for global review.</p>
+        <form id="channel-form">
+          <label class="field">
+            <span>YouTube channel link or handle</span>
+            <input id="channel-input" type="text" placeholder="https://www.youtube.com/@ExampleEducation" required>
+          </label>
+          <label class="field">
+            <span>Reason or subject</span>
+            <textarea id="request-reason" rows="2" placeholder="Math lessons, science experiments, etc."></textarea>
+          </label>
+          <button class="primary" type="submit">Approve and request review</button>
+        </form>
+        <div class="local-list">
+          <h3>Allowed on this browser</h3>
+          <div id="local-channel-list" class="channel-list"></div>
+        </div>
+      </details>
+
+      <section class="sync">
+        <button id="sync-button" type="button">Sync whitelist</button>
+        <span id="sync-cooldown" class="cooldown-note" hidden></span>
+        <span id="status" role="status"></span>
+      </section>
+    </main>
+    <script type="module" src="/src/popup/popup.ts"></script>
+  </body>
+</html>

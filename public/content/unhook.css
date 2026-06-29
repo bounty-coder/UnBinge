@@ -1,0 +1,139 @@
+html[data-safe-yt-access-pending="true"] body {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+html[data-safe-yt-hide-home-feed="true"] ytd-browse[page-subtype="home"] ytd-rich-grid-renderer,
+html[data-safe-yt-hide-home-feed="true"] ytd-two-column-browse-results-renderer {
+  display: none !important;
+}
+
+html[data-safe-yt-hide-video-sidebar="true"] #secondary,
+html[data-safe-yt-hide-video-sidebar="true"] ytd-watch-next-secondary-results-renderer,
+html[data-safe-yt-hide-video-sidebar="true"] ytd-compact-video-renderer {
+  display: none !important;
+}
+
+html[data-safe-yt-hide-live-chat="true"] ytd-live-chat-frame,
+html[data-safe-yt-hide-live-chat="true"] #chat {
+  display: none !important;
+}
+
+html[data-safe-yt-hide-playlists="true"] ytd-playlist-panel-renderer,
+html[data-safe-yt-hide-playlists="true"] ytd-compact-playlist-renderer {
+  display: none !important;
+}
+
+html[data-safe-yt-hide-fundraisers="true"] ytd-donation-shelf-renderer,
+html[data-safe-yt-hide-fundraisers="true"] ytd-fundraiser-renderer {
+  display: none !important;
+}
+
+html[data-safe-yt-hide-end-screen-feed="true"] .ytp-endscreen-content,
+html[data-safe-yt-hide-end-screen-cards="true"] .ytp-ce-element,
+html[data-safe-yt-hide-end-screen-cards="true"] .ytp-cards-button {
+  display: none !important;
+}
+
+html[data-safe-yt-hide-shorts="true"] ytd-reel-shelf-renderer,
+html[data-safe-yt-hide-shorts="true"] ytd-rich-shelf-renderer[is-shorts],
+html[data-safe-yt-hide-shorts="true"] ytd-reel-item-renderer,
+html[data-safe-yt-hide-shorts="true"] ytm-shorts-lockup-view-model,
+html[data-safe-yt-hide-shorts="true"] ytm-shorts-lockup-view-model-v2,
+html[data-safe-yt-hide-shorts="true"] ytd-shorts-lockup-view-model,
+html[data-safe-yt-hide-shorts="true"] ytd-shorts-lockup-view-model-v2,
+html[data-safe-yt-hide-shorts="true"] grid-shorts,
+html[data-safe-yt-hide-shorts="true"] a[href*="/shorts/"],
+html[data-safe-yt-hide-shorts="true"] ytd-video-renderer:has(a[href*="/shorts/"]),
+html[data-safe-yt-hide-shorts="true"] ytd-rich-item-renderer:has(a[href*="/shorts/"]),
+html[data-safe-yt-hide-shorts="true"] ytd-grid-video-renderer:has(a[href*="/shorts/"]),
+html[data-safe-yt-hide-shorts="true"] ytd-guide-entry-renderer a[href^="/shorts"],
+html[data-safe-yt-hide-shorts="true"] ytd-mini-guide-entry-renderer a[href^="/shorts"] {
+  display: none !important;
+}
+
+html[data-safe-yt-hide-comments="true"] ytd-comments,
+html[data-safe-yt-hide-comments="true"] #comments {
+  display: none !important;
+}
+
+html[data-safe-yt-hide-mixes="true"] ytd-radio-renderer,
+html[data-safe-yt-hide-mixes="true"] ytd-compact-radio-renderer {
+  display: none !important;
+}
+
+html[data-safe-yt-hide-merch="true"] ytd-merch-shelf-renderer,
+html[data-safe-yt-hide-merch="true"] ytd-product-shelf-renderer,
+html[data-safe-yt-hide-tickets="true"] ytd-ticket-shelf-renderer,
+html[data-safe-yt-hide-offers="true"] ytd-offer-module-renderer {
+  display: none !important;
+}
+
+html[data-safe-yt-hide-video-info="true"] #info,
+html[data-safe-yt-hide-video-info="true"] ytd-watch-metadata #description {
+  display: none !important;
+}
+
+html[data-safe-yt-hide-top-header="true"] ytd-masthead,
+html[data-safe-yt-hide-top-header="true"] #masthead-container {
+  display: none !important;
+}
+
+html[data-safe-yt-hide-notifications="true"] ytd-notification-topbar-button-renderer,
+html[data-safe-yt-hide-notifications="true"] button[aria-label*="Notifications"] {
+  display: none !important;
+}
+
+html[data-safe-yt-hide-inappropriate-search-results="true"] ytd-search ytd-video-renderer,
+html[data-safe-yt-hide-inappropriate-search-results="true"] ytd-search ytd-channel-renderer,
+html[data-safe-yt-hide-inappropriate-search-results="true"] ytd-search ytd-playlist-renderer,
+html[data-safe-yt-hide-inappropriate-search-results="true"] ytd-search ytd-reel-shelf-renderer,
+html[data-safe-yt-hide-inappropriate-search-results="true"] ytd-section-list-renderer ytd-video-renderer,
+html[data-safe-yt-hide-inappropriate-search-results="true"] ytd-section-list-renderer ytd-channel-renderer,
+html[data-safe-yt-hide-inappropriate-search-results="true"] ytd-section-list-renderer ytd-playlist-renderer {
+  display: none !important;
+}
+
+html[data-safe-yt-hide-explore-trending="true"] a[href="/feed/explore"],
+html[data-safe-yt-hide-explore-trending="true"] a[href="/feed/trending"],
+html[data-safe-yt-hide-explore-trending="true"] a[href^="/feed/explore"],
+html[data-safe-yt-hide-explore-trending="true"] a[href^="/feed/trending"],
+html[data-safe-yt-hide-explore-trending="true"] ytd-guide-entry-renderer:has(a[href="/feed/explore"]),
+html[data-safe-yt-hide-explore-trending="true"] ytd-guide-entry-renderer:has(a[href="/feed/trending"]) {
+  display: none !important;
+}
+
+html[data-safe-yt-disable-annotations="true"] .annotation,
+html[data-safe-yt-disable-annotations="true"] .ytp-ce-element,
+html[data-safe-yt-disable-annotations="true"] .ytp-cards-teaser {
+  display: none !important;
+}
+
+.safe-yt-badge {
+  align-items: center;
+  border-radius: 999px;
+  display: inline-flex;
+  font-family: Inter, Roboto, Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  gap: 4px;
+  line-height: 1;
+  margin-left: 8px;
+  padding: 5px 8px;
+  vertical-align: middle;
+}
+
+.safe-yt-badge::before {
+  content: "✓";
+  font-size: 12px;
+}
+
+.safe-yt-badge--global {
+  background: #e8f2ff;
+  color: #0969da;
+}
+
+.safe-yt-badge--local {
+  background: #e8f8ee;
+  color: #1a7f37;
+}

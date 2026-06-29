@@ -1,0 +1,76 @@
+{
+  "manifest_version": 3,
+  "name": "Unbinge",
+  "description": "Unbinge turns YouTube into a distraction-free, whitelist-based learning space for kids.",
+  "version": "1.0.0",
+  "minimum_chrome_version": "116",
+  "action": {
+    "default_title": "Safe YouTube",
+    "default_popup": "src/popup/popup.html"
+  },
+  "options_page": "src/options/options.html",
+  "background": {
+    "service_worker": "assets/background.js",
+    "type": "module"
+  },
+  "permissions": [
+    "alarms",
+    "declarativeNetRequest",
+    "declarativeNetRequestWithHostAccess",
+    "storage",
+    "tabs",
+    "webNavigation"
+  ],
+  "host_permissions": [
+    "<all_urls>",
+    "https://www.youtube.com/*",
+    "https://m.youtube.com/*",
+    "https://youtube.com/*",
+    "https://*.googlevideo.com/*",
+    "https://*.ytimg.com/*",
+    "https://www.googleapis.com/*",
+    "https://firestore.googleapis.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.youtube.com/*",
+        "https://m.youtube.com/*"
+      ],
+      "js": ["assets/content.js"],
+      "css": ["content/unhook.css"],
+      "run_at": "document_start"
+    }
+  ],
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "youtube_ads",
+        "enabled": false,
+        "path": "rules/youtube-ads.json"
+      },
+      {
+        "id": "privacy_trackers",
+        "enabled": false,
+        "path": "rules/privacy-trackers.json"
+      },
+      {
+        "id": "site_blocklist",
+        "enabled": false,
+        "path": "rules/site-blocklist.json"
+      }
+    ]
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "blocked.html",
+        "blocked.js"
+      ],
+      "matches": [
+        "https://www.youtube.com/*",
+        "https://m.youtube.com/*"
+      ]
+    }
+  ]
+}

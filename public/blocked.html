@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Not Allowed | Unbinge</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: #f7fafc;
+        color: #102033;
+      }
+
+      body {
+        align-items: center;
+        display: flex;
+        justify-content: center;
+        margin: 0;
+        min-height: 100vh;
+      }
+
+      main {
+        background: #ffffff;
+        border: 1px solid #dce6f2;
+        border-radius: 24px;
+        box-shadow: 0 24px 80px rgba(31, 60, 94, 0.14);
+        max-width: 560px;
+        padding: 40px;
+        text-align: center;
+      }
+
+      .icon {
+        align-items: center;
+        background: #eaf4ff;
+        border-radius: 999px;
+        color: #0969da;
+        display: inline-flex;
+        font-size: 32px;
+        height: 72px;
+        justify-content: center;
+        margin-bottom: 20px;
+        width: 72px;
+      }
+
+      h1 {
+        font-size: 28px;
+        line-height: 1.2;
+        margin: 0 0 12px;
+      }
+
+      p {
+        color: #52667a;
+        font-size: 16px;
+        line-height: 1.6;
+        margin: 0;
+      }
+
+      .url {
+        background: #f2f6fb;
+        border-radius: 12px;
+        color: #36495d;
+        display: block;
+        font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+        font-size: 12px;
+        margin-top: 24px;
+        overflow-wrap: anywhere;
+        padding: 12px;
+        text-decoration: underline;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          background: #0b1120;
+          color: #eef6ff;
+        }
+
+        main {
+          background: #111a2d;
+          border-color: #20304d;
+          box-shadow: 0 24px 80px rgba(0, 0, 0, 0.3);
+        }
+
+        .icon {
+          background: #10284a;
+          color: #8bc5ff;
+        }
+
+        p {
+          color: #a7b6c8;
+        }
+
+        .url {
+          background: #0b1528;
+          color: #c4d4e8;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="icon" aria-hidden="true">✓</div>
+      <h1 id="blocked-title">This YouTube page is not approved yet</h1>
+      <p id="blocked-message">
+        Unbinge only opens channels and videos approved for the selected age category.
+        Ask a parent to approve this channel locally or request a global review from the extension popup.
+      </p>
+      <a class="url" id="blocked-url" href="#" target="_blank" rel="noopener noreferrer"></a>
+    </main>
+    <script src="blocked.js"></script>
+  </body>
+</html>
