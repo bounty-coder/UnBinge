@@ -27,3 +27,7 @@ npm-debug.log*
 
 # TypeScript cache
 *.tsbuildinfo
+
+# Website secrets configuration
+website/api/includes/config.php
+
