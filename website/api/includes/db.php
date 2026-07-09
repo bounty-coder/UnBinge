@@ -18,6 +18,10 @@ function get_db(): PDO {
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
             PDO::ATTR_EMULATE_PREPARES   => false,
         ]);
+        //Match the connection collation to the tables (created as utf8mb4_unicode_ci).
+        //Without this, comparing a bound string param (general_ci) against a column (unicode_ci)
+        //throws error 1267 "Illegal mix of collations".
+        $pdo->exec("SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci");
     } catch (PDOException $e) {
         // Don't leak DB details — log privately, return generic error
         error_log('Unbinge DB error: ' . $e->getMessage());
@@ -57,7 +61,17 @@ function require_method(string $method): void {
  */
 function rate_limit(string $endpoint): void {
     $db      = get_db();
-    $ipHash  = hash('sha256', $_SERVER['REMOTE_ADDR'] ?? '');
+
+    // Resolve client IP through proxy/CDN headers if available
+    $ip = $_SERVER['REMOTE_ADDR'] ?? '';
+    if (!empty($_SERVER['HTTP_CF_CONNECTING_IP'])) {
+        $ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
+    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        $parts = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+        $ip = trim($parts[0]);
+    }
+
+    $ipHash  = hash('sha256', $ip);
     $window  = RATE_LIMIT_WINDOW;
     $max     = RATE_LIMIT_MAX;
     $now     = time();

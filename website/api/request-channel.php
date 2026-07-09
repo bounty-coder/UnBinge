@@ -54,16 +54,18 @@ $stmt = $db->prepare(
        request_count    = request_count + 1,
        last_requested_at = NOW(),
        -- Update name/URL if richer data arrives later
-       channel_name = IF(:name2 <> '' AND channel_name IS NULL, :name2, channel_name),
-       channel_url  = IF(:url2 <> channel_url, :url2, channel_url)"
+       channel_name = IF(:name_check <> '' AND channel_name IS NULL, :name_new, channel_name),
+       channel_url  = IF(:url_check <> channel_url, :url_new, channel_url)"
 );
 
 $stmt->execute([
-    ':id'    => $channelId,
-    ':url'   => $channelUrl,
-    ':name'  => $channelName ?: null,
-    ':name2' => $channelName,
-    ':url2'  => $channelUrl,
+    ':id'           => $channelId,
+    ':url'          => $channelUrl,
+    ':name'         => $channelName ?: null,
+    ':name_check'   => $channelName,
+    ':name_new'     => $channelName,
+    ':url_check'    => $channelUrl,
+    ':url_new'      => $channelUrl,
 ]);
 
 json_response(['ok' => true, 'message' => 'Request received. Thank you!']);

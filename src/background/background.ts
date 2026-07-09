@@ -38,7 +38,7 @@ chrome.runtime.onInstalled.addListener(async details => {
   await ensureWeeklySyncAlarm();
 
   if (details.reason === "install") {
-    chrome.runtime.setUninstallURL("https://unbinge.watch/uninstall");
+    chrome.runtime.setUninstallURL("https://unbinge.watch/uninstall.php");
     await chrome.runtime.openOptionsPage();
   }
 

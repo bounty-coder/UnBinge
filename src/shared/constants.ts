@@ -14,7 +14,7 @@ export const API_BASE_URL = "https://unbinge.watch";
 
 // EXT_API_KEY: must match API_KEY in website/api/includes/config.php
 // Generate a random 64-char string and paste the same value in both places.
-export const EXT_API_KEY = "REPLACE_WITH_RANDOM_64_CHAR_STRING";
+export const EXT_API_KEY = "d038e80a-3963-4f3c-b27d-fbb8f11340df";
 
 // YouTube Data API key (still used for channel handle resolution)
 export const YOUTUBE_DATA_API_KEY = "AIzaSyBHAWc3HBdFN2msS4cc0bBF3TqVF_Ebl_U";
@@ -39,7 +39,7 @@ export const YOUTUBE_URL_MATCHES = [
 
 export const SAFE_DEFAULT_LANGUAGE = "en";
 
-const PLACEHOLDER_API_KEY              = "YOUR_API_KEY";
+const PLACEHOLDER_API_KEY = "YOUR_API_KEY";
 const PLACEHOLDER_YOUTUBE_DATA_API_KEY = "YOUR_YOUTUBE_DATA_API_KEY";
 
 // Firebase placeholder constants (kept for easy rollback — not active):

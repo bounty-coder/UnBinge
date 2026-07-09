@@ -11,6 +11,7 @@ $msg = '';
 
 // ---- Actions -----------------------------------------------
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    verify_csrf();
     $action = $_POST['action'] ?? '';
 
     if ($action === 'toggle') {
@@ -80,6 +81,7 @@ admin_topbar();
   <div class="card">
     <h2>➕ Add Channel Manually</h2>
     <form method="post">
+      <?= csrf_input() ?>
       <input type="hidden" name="action" value="add">
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px">
         <div class="form-row"><label>Channel ID (UCxxxx) *</label><input name="channel_id" placeholder="UCbmNph6atAoGfqLoCL_duAg" required></div>
@@ -144,6 +146,7 @@ admin_topbar();
           </td>
           <td style="white-space:nowrap">
             <form method="post" style="display:inline">
+              <?= csrf_input() ?>
               <input type="hidden" name="action" value="toggle">
               <input type="hidden" name="id" value="<?= $c['id'] ?>">
               <input type="hidden" name="current" value="<?= $c['is_active'] ?>">
@@ -152,6 +155,7 @@ admin_topbar();
               </button>
             </form>
             <form method="post" style="display:inline;margin-left:6px">
+              <?= csrf_input() ?>
               <input type="hidden" name="action" value="delete">
               <input type="hidden" name="id" value="<?= $c['id'] ?>">
               <button type="submit" class="btn btn-red"

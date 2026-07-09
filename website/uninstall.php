@@ -9,21 +9,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $reason  = mb_substr(strip_tags(trim($_POST['reason']  ?? '')), 0, 100);
     $message = mb_substr(strip_tags(trim($_POST['message'] ?? '')), 0, 2000);
 
-    // Forward to our own API
-    $payload = json_encode(['reason' => $reason, 'message' => $message]);
-    $ctx = stream_context_create([
-        'http' => [
-            'method'  => 'POST',
-            'header'  => "Content-Type: application/json\r\n" .
-                         "Content-Length: " . strlen($payload) . "\r\n",
-            'content' => $payload,
-            'timeout' => 5,
-        ],
-    ]);
-    $result = @file_get_contents('https://unbinge.watch/api/feedback.php', false, $ctx);
-    $resp   = $result ? json_decode($result, true) : null;
-    $submitted = isset($resp['ok']) && $resp['ok'] === true;
-    if (!$submitted) $error = true;
+    try {
+        require_once __DIR__ . '/api/includes/db.php';
+        $db = get_db();
+        $stmt = $db->prepare(
+            "INSERT INTO uninstall_feedback (reason, message) VALUES (:reason, :message)"
+        );
+        $submitted = $stmt->execute([
+            ':reason'  => $reason  ?: null,
+            ':message' => $message ?: null,
+        ]);
+        if (!$submitted) {
+            $error = true;
+        }
+    } catch (Exception $e) {
+        error_log('Uninstall feedback db error: ' . $e->getMessage());
+        $error = true;
+    }
 }
 ?>
 <!doctype html>

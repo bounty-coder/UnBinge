@@ -6,9 +6,10 @@ require_once __DIR__ . '/../api/includes/config.php';
 require_once __DIR__ . '/../api/includes/db.php';
 
 session_name(ADMIN_SESSION_NAME);
+$secureCookie = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on';
 session_start([
     'cookie_httponly' => true,
-    'cookie_secure'   => true,
+    'cookie_secure'   => $secureCookie,
     'cookie_samesite' => 'Strict',
 ]);
 

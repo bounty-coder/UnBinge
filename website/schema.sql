@@ -94,9 +94,12 @@ CREATE TABLE IF NOT EXISTS api_rate_limits (
 -- ============================================================
 --  Seed: create default admin  (CHANGE PASSWORD IMMEDIATELY)
 --  Hash below = bcrypt of "changeme123" — update via admin UI
+--  WARNING: Never run this seed directly on a public server.
+--  To activate a default admin temporarily, uncomment the query below.
 -- ============================================================
-INSERT IGNORE INTO admin_users (username, password_hash)
-VALUES ('admin', '$2y$12$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi');
+-- INSERT IGNORE INTO admin_users (username, password_hash)
+-- VALUES ('admin', '$2y$12$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi');
+
 
 -- ============================================================
 --  Seed: example whitelisted channel (Aditya Verma)

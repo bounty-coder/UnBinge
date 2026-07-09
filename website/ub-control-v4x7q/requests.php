@@ -11,6 +11,7 @@ $msg = '';
 
 // ---- Actions -----------------------------------------------
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    verify_csrf();
     $action    = $_POST['action']    ?? '';
     $channelId = $_POST['channel_id'] ?? '';
     $note      = mb_substr(strip_tags($_POST['admin_note'] ?? ''), 0, 500);
@@ -134,6 +135,7 @@ admin_topbar();
             <details>
               <summary class="btn btn-green" style="cursor:pointer;list-style:none">✓ Approve</summary>
               <form method="post" style="margin-top:10px;background:#151823;padding:14px;border-radius:8px;min-width:260px">
+                <?= csrf_input() ?>
                 <input type="hidden" name="action" value="approve">
                 <input type="hidden" name="channel_id" value="<?= htmlspecialchars($r['channel_id']) ?>">
                 <div class="form-row">
@@ -161,6 +163,7 @@ admin_topbar();
               </form>
             </details>
             <form method="post" style="display:inline;margin-left:6px">
+              <?= csrf_input() ?>
               <input type="hidden" name="action" value="reject">
               <input type="hidden" name="channel_id" value="<?= htmlspecialchars($r['channel_id']) ?>">
               <button type="submit" class="btn btn-red" onclick="return confirm('Reject this request?')">✕ Reject</button>
