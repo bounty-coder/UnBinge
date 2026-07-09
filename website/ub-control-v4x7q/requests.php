@@ -36,32 +36,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $ageGroup = $_POST['age_group'] ?? 'all';
             $language = $_POST['language']  ?? 'en';
             $category = mb_substr(strip_tags($_POST['category'] ?? ''), 0, 128);
+            $postedHandle = preg_replace('/[^A-Za-z0-9_.\-]/', '', ltrim(trim($_POST['handle'] ?? ''), '@'));
 
             // Fetch channel info from request row
             $req = $db->prepare(
-                "SELECT channel_id, channel_name, channel_url FROM requested_channels WHERE channel_id=:id"
+                "SELECT channel_id, handle, channel_name, channel_url FROM requested_channels WHERE channel_id=:id"
             );
             $req->execute([':id' => $channelId]);
             $row = $req->fetch();
 
             if ($row) {
+                $handle = $postedHandle ?: ($row['handle'] ?? null);
                 $db->prepare(
                     "INSERT INTO whitelist_channels
-                       (channel_id, name, language, category, age_group, badge)
-                     VALUES (:id, :name, :lang, :cat, :age, 'blue')
+                       (channel_id, handle, name, language, category, age_group, badge)
+                     VALUES (:id, :handle, :name, :lang, :cat, :age, 'blue')
                      ON DUPLICATE KEY UPDATE
+                       handle=COALESCE(:handle2, handle),
                        name=:name2, language=:lang2, category=:cat2,
                        age_group=:age2, is_active=1, badge='blue'"
                 )->execute([
-                    ':id'    => $row['channel_id'],
-                    ':name'  => $row['channel_name'] ?? $row['channel_id'],
-                    ':lang'  => $language,
-                    ':cat'   => $category ?: null,
-                    ':age'   => $ageGroup,
-                    ':name2' => $row['channel_name'] ?? $row['channel_id'],
-                    ':lang2' => $language,
-                    ':cat2'  => $category ?: null,
-                    ':age2'  => $ageGroup,
+                    ':id'      => $row['channel_id'],
+                    ':handle'  => $handle ?: null,
+                    ':name'    => $row['channel_name'] ?? $row['channel_id'],
+                    ':lang'    => $language,
+                    ':cat'     => $category ?: null,
+                    ':age'     => $ageGroup,
+                    ':handle2' => $handle ?: null,
+                    ':name2'   => $row['channel_name'] ?? $row['channel_id'],
+                    ':lang2'   => $language,
+                    ':cat2'    => $category ?: null,
+                    ':age2'    => $ageGroup,
                 ]);
             }
         }
@@ -120,6 +125,9 @@ admin_topbar();
         <tr>
           <td>
             <strong><?= htmlspecialchars($r['channel_name'] ?? '—') ?></strong><br>
+            <?php if (!empty($r['handle'])): ?>
+              <small style="color:#64748b">@<?= htmlspecialchars($r['handle']) ?></small><br>
+            <?php endif; ?>
             <small style="color:#64748b"><?= htmlspecialchars($r['channel_id']) ?></small>
           </td>
           <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
@@ -138,6 +146,10 @@ admin_topbar();
                 <?= csrf_input() ?>
                 <input type="hidden" name="action" value="approve">
                 <input type="hidden" name="channel_id" value="<?= htmlspecialchars($r['channel_id']) ?>">
+                <div class="form-row">
+                  <label>Handle (@name)</label>
+                  <input name="handle" value="<?= htmlspecialchars($r['handle'] ?? '') ?>" placeholder="TheAdityaVerma">
+                </div>
                 <div class="form-row">
                   <label>Age Group</label>
                   <select name="age_group">
