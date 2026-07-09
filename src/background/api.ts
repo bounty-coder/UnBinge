@@ -105,9 +105,10 @@ export async function submitChannelRequest(payload: ChannelRequestPayload): Prom
   ensureConfigured();
 
   const body = {
-    channel_url:  payload.normalizedUrl ?? payload.submittedInput,
-    channel_id:   payload.channelId     ?? "",
-    channel_name: payload.title         ?? ""
+    channel_url:    payload.normalizedUrl ?? payload.submittedInput,
+    channel_id:     payload.channelId     ?? "",
+    channel_handle: payload.handle        ?? "",
+    channel_name:   payload.title         ?? ""
   };
 
   const response = await fetch(`${API_BASE_URL}/api/request-channel.php`, {

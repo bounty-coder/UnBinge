@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS requested_channels (
   id                   INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   channel_id           VARCHAR(64)  NOT NULL COMMENT 'YouTube UC... (resolved on submission)',
   channel_url          VARCHAR(512) NOT NULL COMMENT 'Original URL the user pasted',
+  handle               VARCHAR(128) DEFAULT NULL COMMENT '@handle without the @',
   channel_name         VARCHAR(512) DEFAULT NULL COMMENT 'Display name if resolvable',
   request_count        INT UNSIGNED NOT NULL DEFAULT 1,
   first_requested_at   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,

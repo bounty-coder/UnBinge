@@ -26,6 +26,7 @@ $body = json_decode(file_get_contents('php://input'), true) ?? [];
 
 $channelUrl  = trim($body['channel_url']  ?? '');
 $channelId   = trim($body['channel_id']   ?? '');
+$handle      = trim($body['channel_handle'] ?? $body['handle'] ?? '');
 $channelName = trim($body['channel_name'] ?? '');
 
 if ($channelUrl === '') {
@@ -36,6 +37,7 @@ if ($channelUrl === '') {
 $channelUrl  = filter_var($channelUrl,  FILTER_SANITIZE_URL);
 $channelName = mb_substr(strip_tags($channelName), 0, 512);
 $channelId   = preg_replace('/[^A-Za-z0-9_\-]/', '', $channelId);
+$handle      = preg_replace('/[^A-Za-z0-9_.\-]/', '', ltrim($handle, '@'));
 
 // If no channel_id provided, derive a stable key from the URL
 // so we can still dedup (will be enriched by admin later)
@@ -47,13 +49,14 @@ $db = get_db();
 
 $stmt = $db->prepare(
     "INSERT INTO requested_channels
-       (channel_id, channel_url, channel_name, request_count)
+       (channel_id, channel_url, handle, channel_name, request_count)
      VALUES
-       (:id, :url, :name, 1)
+       (:id, :url, :handle, :name, 1)
      ON DUPLICATE KEY UPDATE
        request_count    = request_count + 1,
        last_requested_at = NOW(),
        -- Update name/URL if richer data arrives later
+       handle       = IF(:handle_check <> '' AND (handle IS NULL OR handle = ''), :handle_new, handle),
        channel_name = IF(:name_check <> '' AND channel_name IS NULL, :name_new, channel_name),
        channel_url  = IF(:url_check <> channel_url, :url_new, channel_url)"
 );
@@ -61,6 +64,9 @@ $stmt = $db->prepare(
 $stmt->execute([
     ':id'           => $channelId,
     ':url'          => $channelUrl,
+    ':handle'       => $handle ?: null,
+    ':handle_check' => $handle,
+    ':handle_new'   => $handle,
     ':name'         => $channelName ?: null,
     ':name_check'   => $channelName,
     ':name_new'     => $channelName,
