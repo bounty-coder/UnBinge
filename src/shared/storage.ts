@@ -57,10 +57,23 @@ export function mergeSettings(value: Partial<ExtensionSettings> | undefined): Ex
 }
 
 export async function getGlobalWhitelistChannels(): Promise<WhitelistChannel[]> {
-  const data = await chrome.storage.local.get(STORAGE_KEYS.globalWhitelistChannels);
-  return Array.isArray(data[STORAGE_KEYS.globalWhitelistChannels])
+  const data = await chrome.storage.local.get([
+    STORAGE_KEYS.globalWhitelistChannels,
+    STORAGE_KEYS.legacyGlobalWhitelistChannels
+  ]);
+  const channels = Array.isArray(data[STORAGE_KEYS.globalWhitelistChannels])
     ? data[STORAGE_KEYS.globalWhitelistChannels]
-    : [];
+    : data[STORAGE_KEYS.legacyGlobalWhitelistChannels];
+
+  if (!Array.isArray(channels)) {
+    return [];
+  }
+
+  if (!Array.isArray(data[STORAGE_KEYS.globalWhitelistChannels])) {
+    await setGlobalWhitelistChannels(channels);
+  }
+
+  return channels;
 }
 
 export async function setGlobalWhitelistChannels(
@@ -69,19 +82,34 @@ export async function setGlobalWhitelistChannels(
   await chrome.storage.local.set({
     [STORAGE_KEYS.globalWhitelistChannels]: channels
   });
+  await chrome.storage.local.remove(STORAGE_KEYS.legacyGlobalWhitelistChannels);
 }
 
 export async function getGlobalWhitelistVideos(): Promise<WhitelistVideo[]> {
-  const data = await chrome.storage.local.get(STORAGE_KEYS.globalWhitelistVideos);
-  return Array.isArray(data[STORAGE_KEYS.globalWhitelistVideos])
+  const data = await chrome.storage.local.get([
+    STORAGE_KEYS.globalWhitelistVideos,
+    STORAGE_KEYS.legacyGlobalWhitelistVideos
+  ]);
+  const videos = Array.isArray(data[STORAGE_KEYS.globalWhitelistVideos])
     ? data[STORAGE_KEYS.globalWhitelistVideos]
-    : [];
+    : data[STORAGE_KEYS.legacyGlobalWhitelistVideos];
+
+  if (!Array.isArray(videos)) {
+    return [];
+  }
+
+  if (!Array.isArray(data[STORAGE_KEYS.globalWhitelistVideos])) {
+    await setGlobalWhitelistVideos(videos);
+  }
+
+  return videos;
 }
 
 export async function setGlobalWhitelistVideos(videos: WhitelistVideo[]): Promise<void> {
   await chrome.storage.local.set({
     [STORAGE_KEYS.globalWhitelistVideos]: videos
   });
+  await chrome.storage.local.remove(STORAGE_KEYS.legacyGlobalWhitelistVideos);
 }
 
 export async function getLocalApprovedChannels(): Promise<Record<string, LocalApprovedChannel>> {

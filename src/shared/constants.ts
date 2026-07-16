@@ -1,7 +1,9 @@
 export const STORAGE_KEYS = {
   settings: "settings",
-  globalWhitelistChannels: "globalWhitelistChannels",
-  globalWhitelistVideos: "globalWhitelistVideos",
+  globalWhitelistChannels: "whitelist_channels",
+  globalWhitelistVideos: "whitelist_videos",
+  legacyGlobalWhitelistChannels: "globalWhitelistChannels",
+  legacyGlobalWhitelistVideos: "globalWhitelistVideos",
   localApprovedChannels: "localApprovedChannels",
   resolvedVideoChannels: "resolvedVideoChannels"
 } as const;
