@@ -171,19 +171,34 @@ function findGlobalChannel(
   channels: WhitelistChannel[],
   settings: ExtensionSettings
 ): WhitelistChannel | undefined {
-  const normalizedKeys = new Set(channelKeys.map(normalizeChannelKey));
+  const normalizedKeys = new Set(channelKeys.map(normalizeChannelKey).filter(Boolean));
 
   return channels.find(channel => {
     const candidateKeys = [
       channel.channelId,
       channel.handle
-    ].map(normalizeChannelKey);
+    ].map(normalizeChannelKey).filter(Boolean);
+
+    const hasKeyMatch = candidateKeys.some(key => normalizedKeys.has(key));
+
+    if (hasKeyMatch) {
+      const statusMatch = channel.status === "approved";
+      const ageMatch = channel.ageCategories.includes(settings.ageCategory);
+
+      if (!statusMatch || !ageMatch) {
+        console.warn("Unbinge: Channel matched by key, but failed criteria.", {
+          channel,
+          settingsAge: settings.ageCategory,
+          statusMatch,
+          ageMatch
+        });
+      }
+    }
 
     return (
       channel.status === "approved" &&
       channel.ageCategories.includes(settings.ageCategory) &&
-      matchesLanguage(channel.languages, settings.allowedLanguages) &&
-      candidateKeys.some(key => normalizedKeys.has(key))
+      hasKeyMatch
     );
   });
 }
@@ -216,7 +231,13 @@ function matchesLanguage(channelLanguages: string[], allowedLanguages: string[])
     return true;
   }
 
-  return channelLanguages.some(language => allowedLanguages.includes(language));
+  const allowed = allowedLanguages.map(l => l.toLowerCase().trim());
+  return channelLanguages.some(lang => {
+    if (!lang) return true;
+    const l = lang.toLowerCase().trim();
+    // Allow matches like "english" for "en" and vice versa
+    return allowed.some(a => l.startsWith(a) || a.startsWith(l));
+  });
 }
 
 

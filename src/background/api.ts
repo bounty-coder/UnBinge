@@ -47,9 +47,9 @@ function ensureConfigured(): void {
 /** Map the PHP age_group field to our internal AgeCategory. */
 function mapAgeGroup(ag: string): AgeCategory[] {
   if (ag === "all")   return ["kids", "teens", "adult"];
-  if (ag === "kids")  return ["kids"];
-  if (ag === "teens") return ["kids", "teens"];   // teens includes kids-safe content
-  if (ag === "adult") return ["kids", "teens", "adult"];
+  if (ag === "kids")  return ["kids", "teens", "adult"];
+  if (ag === "teens") return ["teens", "adult"];
+  if (ag === "adult") return ["adult"];
   return ["kids", "teens", "adult"];
 }
 
