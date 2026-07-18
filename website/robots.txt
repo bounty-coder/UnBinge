@@ -1,0 +1,11 @@
+# robots.txt — unbinge.watch
+# Allow all public pages, block admin + API from indexing
+
+User-agent: *
+Allow: /
+Disallow: /ub-control-v4x7q/
+Disallow: /api/
+Disallow: /uninstall.php
+
+# Sitemap location
+Sitemap: https://unbinge.watch/sitemap.xml
