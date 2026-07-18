@@ -53,16 +53,71 @@ export async function evaluateYouTubeAccess(
 
   const videoId = metadata?.videoId ?? parsed.videoId;
 
+  // For watch pages reached via SPA navigation, the DOM-provided channel keys
+  // (channelId from ytInitialPlayerResponse, channelHandle from live anchors)
+  // are UNRELIABLE: the inline script is not re-injected (stale previous
+  // video's channelId) and the owner-renderer anchor lags behind the URL
+  // change. The videoId from the URL is always correct, so we resolve the
+  // channel AUTHORITATIVELY from the videoId via the YouTube API (cached)
+  // and check the whitelist against that — ignoring DOM channel keys entirely
+  // for watch pages. For channel pages, the URL itself carries the channel
+  // key, so we trust parsed.channelKey (and DOM keys as a fallback).
+  // (Shorts are already blocked above.)
+  const isWatchLikePage = parsed.pageType === "watch";
+
+  const channelKeys = isWatchLikePage
+    ? []
+    : [
+        metadata?.channelId,
+        metadata?.channelHandle,
+        parsed.channelKey
+      ].filter((value): value is string => Boolean(value));
+
   // const globalVideos = await getGlobalWhitelistVideos();
   // if (videoId && isVideoAllowed(videoId, globalVideos)) {
   //   return { allowed: true, source: "video", badge: "global_verified" };
   // }
 
-  const channelKeys = [
-    metadata?.channelId,
-    metadata?.channelHandle,
-    parsed.channelKey
-  ].filter((value): value is string => Boolean(value));
+  // For watch pages, resolve the channel from the videoId FIRST (authoritative).
+  // For channel pages, use the URL/DOM channel keys first, then fall back to
+  // videoId resolution if a videoId is present.
+  if (isWatchLikePage && videoId) {
+    const resolvedMetadata = await resolveVideoChannel(videoId);
+
+    if (resolvedMetadata) {
+      const resolvedChannelKeys = [
+        resolvedMetadata.channelId,
+        resolvedMetadata.channelHandle
+      ].filter((value): value is string => Boolean(value));
+
+      const resolvedLocalMatch = findLocalChannel(resolvedChannelKeys, localChannels);
+
+      if (resolvedLocalMatch) {
+        return { allowed: true, source: "local", badge: "local_parent" };
+      }
+
+      const resolvedLocalApprovalFromHandle = resolvedMetadata.channelId
+        ? await findLocalChannelByResolvingHandles(resolvedMetadata.channelId, localChannels)
+        : undefined;
+
+      if (resolvedLocalApprovalFromHandle) {
+        return { allowed: true, source: "local", badge: "local_parent" };
+      }
+
+      const resolvedGlobalMatch = findGlobalChannel(resolvedChannelKeys, globalChannels, settings);
+
+      if (resolvedGlobalMatch) {
+        return { allowed: true, source: "global", badge: "global_verified" };
+      }
+    }
+
+    // Could not resolve the channel (API/oEmbed/HTML all failed). Fall through
+    // to the not-allowed decision below rather than approving on stale DOM.
+    return {
+      allowed: false,
+      reason: "This YouTube page is not on the approved education whitelist."
+    };
+  }
 
   const localMatch = findLocalChannel(channelKeys, localChannels);
 
@@ -114,14 +169,6 @@ export async function evaluateYouTubeAccess(
         return { allowed: true, source: "global", badge: "global_verified" };
       }
     }
-  }
-
-  if (parsed.pageType === "watch" && channelKeys.length === 0) {
-    return {
-      allowed: false,
-      needsMetadata: true,
-      reason: "Checking whether this video belongs to an approved educational channel."
-    };
   }
 
   return {
