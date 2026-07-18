@@ -114,6 +114,16 @@ function installRouteWatcher(): void {
     subtree: true
   });
 
+  window.addEventListener("yt-navigate-start", () => {
+    // Immediately mark the page as pending (hides content via CSS) the moment
+    // SPA navigation begins, so a non-whitelisted video never flashes before
+    // the access decision returns.
+    if (currentSettings?.educationModeEnabled) {
+      root.dataset.safeYtAccessPending = "true";
+      clearBadge();
+    }
+  });
+
   window.addEventListener("yt-navigate-finish", () => {
     void checkCurrentPageAccess();
   });
@@ -136,7 +146,14 @@ async function checkCurrentPageAccess(): Promise<void> {
 
   root.dataset.safeYtAccessPending = "true";
 
-  const metadata = await waitForMetadata();
+  // Resolve the channel authoritatively from the videoId (always correct from
+  // the URL, even mid-SPA-transition) rather than trusting stale DOM metadata.
+  // The background resolves the channel via the YouTube API (cached) and checks
+  // the whitelist. We only wait briefly for the live-DOM channel handle as a
+  // fast-path; we never trust the ytInitialPlayerResponse inline script,
+  // which is NOT re-injected on SPA navigation and returns the previous
+  // video's channelId.
+  const metadata = await waitForFreshMetadata();
   const response = (await chrome.runtime.sendMessage({
     type: "CHECK_YOUTUBE_ACCESS",
     url: location.href,
@@ -157,20 +174,31 @@ async function checkCurrentPageAccess(): Promise<void> {
   renderBadge(response.decision);
 }
 
-async function waitForMetadata(): Promise<YouTubeMetadata> {
-  const deadline = Date.now() + 2500;
+async function waitForFreshMetadata(): Promise<YouTubeMetadata> {
+  const parsed = parseYouTubeUrl(location.href);
 
-  while (Date.now() < deadline) {
-    const metadata = extractMetadata();
-
-    if (metadata.channelId || metadata.channelHandle || parseYouTubeUrl(location.href).pageType !== "watch") {
-      return metadata;
-    }
-
-    await delay(150);
+  // For non-watch pages, the URL itself carries the channel key (e.g. /@handle
+  // or /channel/UC...), so we can decide immediately without waiting on the DOM.
+  if (parsed.pageType !== "watch" && parsed.pageType !== "shorts") {
+    return {
+      url: location.href,
+      videoId: parsed.videoId,
+      channelId: parsed.channelKey?.startsWith("UC") ? parsed.channelKey : undefined,
+      channelHandle: parsed.channelKey?.startsWith("@") ? parsed.channelKey : undefined
+    };
   }
 
-  return extractMetadata();
+  // For watch/shorts pages, the videoId from the URL is the only reliable
+  // signal during SPA navigation. The background resolves the channel
+  // AUTHORITATIVELY from the videoId via the YouTube API (cached) and checks
+  // the whitelist — we do NOT send DOM channel keys, because the inline
+  // ytInitialPlayerResponse script is stale (not re-injected) and the live
+  // owner-renderer anchor lags behind the URL change. Sending just the
+  // videoId makes the block instant and reliable.
+  return {
+    url: location.href,
+    videoId: parsed.videoId
+  };
 }
 
 function extractMetadata(): YouTubeMetadata {
