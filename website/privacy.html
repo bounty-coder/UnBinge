@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Privacy Policy — Unbinge</title>
-  <meta name="description" content="Unbinge stores all settings locally on your device. We collect no personal data. Read the full privacy policy.">
+  <title>Privacy Policy - Unbinge</title>
+  <meta name="description" content="Unbinge stores settings locally and uses limited remote requests to sync approved YouTube channels. Read the full privacy policy.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://unbinge.watch/privacy.html">
   <link rel="stylesheet" href="assets/style.css">
@@ -18,7 +18,7 @@
     <a href="index.html#profiles">Profiles</a>
     <a href="install.html">Get Started</a>
   </div>
-  <a href="install.html" class="nav-cta">Get the Extension →</a>
+  <a href="install.html" class="nav-cta">Get the Extension &rarr;</a>
 </nav>
 
 <section style="padding: 64px 24px 32px">
@@ -31,67 +31,91 @@
 
     <div class="prose" style="color:var(--text);font-size:15px;line-height:1.7">
       <p style="color:var(--muted);margin-bottom:32px">
-        Unbinge is built with one principle: <strong style="color:var(--text)">your data stays on your device</strong>.
-        This policy explains, in plain language, what we do and don't collect.
+        Unbinge is built with one principle: <strong style="color:var(--text)">collect only what is needed to keep YouTube focused on approved educational channels</strong>.
+        This policy explains, in plain language, what we store locally, what we send to servers, and what we do not collect.
       </p>
 
       <h2 style="font-size:20px;font-weight:800;margin:32px 0 12px">1. What the extension stores</h2>
       <p style="color:var(--muted);margin-bottom:16px">
-        All Unbinge settings — your age profile, Education Mode toggle, distraction
-        filters, locally approved channels, and theme — are saved in your browser's
-        local storage. They never leave your device.
+        Most Unbinge settings, including your age profile, Education Mode toggle,
+        distraction filters, locally approved channels, and theme, are saved in your
+        browser's local storage. These settings are used only to apply your YouTube
+        filtering choices in this browser.
       </p>
 
       <h2 style="font-size:20px;font-weight:800;margin:32px 0 12px">2. What we do not collect</h2>
       <ul style="color:var(--muted);padding-left:20px;margin-bottom:16px">
-        <li style="margin-bottom:8px">No names, emails, or account details — there is no sign-up.</li>
-        <li style="margin-bottom:8px">No browsing history or watch history.</li>
+        <li style="margin-bottom:8px">No names, emails, or account details. There is no sign-up.</li>
+        <li style="margin-bottom:8px">No full browsing history or watch history.</li>
         <li style="margin-bottom:8px">No device identifiers or advertising IDs.</li>
-        <li style="margin-bottom:8px">No third-party trackers or analytics on the extension.</li>
+        <li style="margin-bottom:8px">No third-party trackers or analytics in the extension.</li>
       </ul>
 
       <h2 style="font-size:20px;font-weight:800;margin:32px 0 12px">3. Channel requests</h2>
       <p style="color:var(--muted);margin-bottom:16px">
-        When you submit a channel for global review, only the <strong style="color:var(--text)">channel URL</strong>
-        is sent to our server. No personal information is attached to the request.
+        When you submit or locally approve a channel for review, the extension may send
+        the channel URL, channel ID, channel handle, and channel name to our server. This
+        lets us review requested channels and improve the shared educational whitelist.
+        We do not attach your name, email, account identifier, or Chrome profile
+        information to the request.
       </p>
 
       <h2 style="font-size:20px;font-weight:800;margin:32px 0 12px">4. Whitelist sync</h2>
       <p style="color:var(--muted);margin-bottom:16px">
-        When the extension syncs the approved channel list, your browser sends an
-        API key and a hashed version of your IP address (SHA-256) for rate-limiting
-        only. We never store raw IP addresses and cannot identify you from the hash.
+        When the extension syncs the approved channel list, your browser sends your
+        selected age category to unbinge.watch so the server can return the appropriate
+        channel list. The request includes an extension API key used to protect the
+        endpoint from abuse. Your browser stores the returned whitelist locally.
       </p>
 
-      <h2 style="font-size:20px;font-weight:800;margin:32px 0 12px">5. Uninstall feedback</h2>
+      <h2 style="font-size:20px;font-weight:800;margin:32px 0 12px">5. YouTube and Google API lookups</h2>
+      <p style="color:var(--muted);margin-bottom:16px">
+        To decide whether a YouTube video belongs to an approved channel, the extension
+        may request public video or channel metadata from YouTube pages, YouTube oEmbed,
+        or the YouTube Data API. These requests can include the YouTube video ID or
+        channel handle from the page you are trying to open. The returned metadata is
+        used only for whitelist enforcement and may be cached locally in your browser.
+      </p>
+
+      <h2 style="font-size:20px;font-weight:800;margin:32px 0 12px">6. Limited Use</h2>
+      <p style="color:var(--muted);margin-bottom:16px">
+        Unbinge uses extension permissions and any information received from Google APIs
+        only to provide and improve its single purpose: creating a distraction-free,
+        whitelist-based YouTube learning environment. We do not sell this information,
+        use it for advertising, or transfer it except as needed to provide the
+        extension's features, comply with law, or protect the service from abuse.
+      </p>
+
+      <h2 style="font-size:20px;font-weight:800;margin:32px 0 12px">7. Uninstall feedback</h2>
       <p style="color:var(--muted);margin-bottom:16px">
         If you choose to leave feedback when uninstalling, the reason and optional
         message you provide are stored on our server to help improve Unbinge.
         Submission is entirely optional and anonymous.
       </p>
 
-      <h2 style="font-size:20px;font-weight:800;margin:32px 0 12px">6. This website</h2>
+      <h2 style="font-size:20px;font-weight:800;margin:32px 0 12px">8. This website</h2>
       <p style="color:var(--muted);margin-bottom:16px">
         The unbinge.watch website does not use cookies, analytics, or advertising
-        trackers. Standard server logs (IP, timestamp, requested path) may be kept
-        by Hostinger for security and abuse prevention, as required by hosting policy.
+        trackers. Standard server logs, such as IP address, timestamp, and requested
+        path, may be kept by our hosting provider for security and abuse prevention.
       </p>
 
-      <h2 style="font-size:20px;font-weight:800;margin:32px 0 12px">7. Children's privacy</h2>
+      <h2 style="font-size:20px;font-weight:800;margin:32px 0 12px">9. Children's privacy</h2>
       <p style="color:var(--muted);margin-bottom:16px">
         Unbinge is designed for families and children. We do not knowingly collect
-        any personal information from children or anyone else. If you believe a
-        child has shared data with us, contact us and we will delete it.
+        names, emails, account details, or other direct personal identifiers from
+        children. If you believe a child has shared personal information with us,
+        contact us and we will delete it.
       </p>
 
-      <h2 style="font-size:20px;font-weight:800;margin:32px 0 12px">8. Data retention</h2>
+      <h2 style="font-size:20px;font-weight:800;margin:32px 0 12px">10. Data retention</h2>
       <p style="color:var(--muted);margin-bottom:16px">
         Channel requests and uninstall feedback are retained for as long as useful
         for improving the service. You may request deletion of any feedback you
         submitted by emailing us.
       </p>
 
-      <h2 style="font-size:20px;font-weight:800;margin:32px 0 12px">9. Contact</h2>
+      <h2 style="font-size:20px;font-weight:800;margin:32px 0 12px">11. Contact</h2>
       <p style="color:var(--muted);margin-bottom:16px">
         Questions about this policy? Email <a href="mailto:hello@unbinge.watch">hello@unbinge.watch</a>
         or visit our <a href="contact.html">contact page</a>.
@@ -102,7 +126,7 @@
 
 <footer>
   <div class="container">
-    <p>© 2026 Unbinge · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="contact.html">Contact</a> · Not affiliated with YouTube or Google.</p>
+    <p>&copy; 2026 Unbinge &middot; <a href="privacy.html">Privacy</a> &middot; <a href="terms.html">Terms</a> &middot; <a href="contact.html">Contact</a> &middot; Not affiliated with YouTube or Google.</p>
   </div>
 </footer>
 

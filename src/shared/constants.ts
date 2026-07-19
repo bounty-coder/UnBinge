@@ -8,8 +8,6 @@ export const STORAGE_KEYS = {
   resolvedVideoChannels: "resolvedVideoChannels"
 } as const;
 
-export const DNR_RULESET_IDS = ["youtube_ads", "privacy_trackers", "site_blocklist"] as const;
-
 // ── PHP / MySQL backend (unbinge.watch) ─────────────────────
 // API_BASE_URL: the root of your Hostinger site (no trailing slash)
 export const API_BASE_URL = "https://unbinge.watch";

@@ -1,5 +1,4 @@
 import { evaluateYouTubeAccess } from "./access-control";
-import { updateAdBlocking } from "./dnr";
 import { submitChannelRequest } from "./api";
 import { syncGlobalWhitelist } from "./whitelist-cache";
 import { resolveChannelByHandle } from "./youtube-api";
@@ -33,8 +32,7 @@ type RuntimeMessage =
 const WEEKLY_SYNC_PERIOD_MINUTES = 7 * 24 * 60; // once a week
 
 chrome.runtime.onInstalled.addListener(async details => {
-  const settings = await ensureSettings();
-  await updateAdBlocking(settings.adBlockEnabled);
+  await ensureSettings();
   await ensureWeeklySyncAlarm();
 
   if (details.reason === "install") {
@@ -46,8 +44,7 @@ chrome.runtime.onInstalled.addListener(async details => {
 });
 
 chrome.runtime.onStartup.addListener(async () => {
-  const settings = await ensureSettings();
-  await updateAdBlocking(settings.adBlockEnabled);
+  await ensureSettings();
   await ensureWeeklySyncAlarm();
 });
 
@@ -75,7 +72,6 @@ chrome.storage.onChanged.addListener((changes, areaName) => {
   }
 
   const nextSettings = changes[STORAGE_KEYS.settings].newValue as ExtensionSettings;
-  void updateAdBlocking(nextSettings.adBlockEnabled);
   void broadcastSettings(nextSettings);
 });
 
@@ -107,7 +103,6 @@ async function handleMessage(message: RuntimeMessage): Promise<Record<string, un
   switch (message.type) {
     case "GET_SETTINGS": {
       const settings = await getSettings();
-      await updateAdBlocking(settings.adBlockEnabled);
       return { settings };
     }
 
