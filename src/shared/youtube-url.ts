@@ -2,7 +2,7 @@ import type { ParsedYouTubeUrl } from "./types";
 
 const YOUTUBE_HOSTS = new Set(["youtube.com", "www.youtube.com", "m.youtube.com"]);
 
-export function parseYouTubeUrl(rawUrl: string): ParsedYouTubeUrl {
+export function parseYouTubeUrl(rawUrl: string): ParsedYouTubeUrl {  //parsing fuction for youtube url
   let url: URL;
 
   try {

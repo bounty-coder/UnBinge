@@ -2,7 +2,7 @@ export type AgeCategory = "kids" | "teens" | "adult";
 
 export type ThemeMode = "light" | "dark";
 
-export type ApprovalSource = "global" | "local" | "video" | "education_off";
+export type ApprovalSource = "global" | "local" | "video" | "education_off";  //approval types
 
 export type AccessDecision =
   | {

@@ -22,7 +22,7 @@ export const DEFAULT_DISTRACTION_FILTERS: DistractionFilters = {
   hideInappropriateSearchResults: false,
   hideExploreTrending: true,
   disableAutoplay: true,
-  disableAnnotations: true // kept in data model but hidden from UI
+  disableAnnotations: true // kept in data model but hidden from UI, will remove it
 };
 
 export const DEFAULT_SETTINGS: ExtensionSettings = {

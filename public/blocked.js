@@ -9,7 +9,7 @@ const target = document.getElementById("blocked-url");
 if (title && message && profile === "adult") {
   title.textContent = "Education Mode blocked this page";
   message.textContent =
-    "This page is not in your approved YouTube list. As an Adult/Parent profile, you can turn off Education Mode, approve the channel locally, or request global review from the extension popup.";
+    "This page is not in your approved YouTube list. As an Adult/Parent profile, you can turn off Educational Mode, approve the channel locally, or request global review from the extension popup.";
 } else if (title && message) {
   title.textContent = "This YouTube page is not approved yet";
   message.textContent =

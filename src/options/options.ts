@@ -45,6 +45,7 @@ function setStatus(message: string): void {
   }
 }
 
+
 async function sendMessage<T>(message: unknown): Promise<MessageResponse<T>> {
   const response = (await chrome.runtime.sendMessage(message)) as MessageResponse<T>;
 

@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </h1>
   <p style="color:var(--muted);font-size:16px;max-width:480px;margin:0 auto <?= $submitted ? '0' : '36px' ?>">
     <?php if ($submitted): ?>
-      Your feedback helps us make Unbinge better. If you ever want to give it another try, reinstalling takes just 2 minutes.
+      Your feedback helps us make Unbinge better. If you ever want to give it another try, reinstalling takes just 2 minutes. 
     <?php else: ?>
       Unbinge was removed from your browser. We'd love to know what we can improve — no email required, completely anonymous.
     <?php endif; ?>
