@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Unbinge",
-  "description": "Unbinge turns YouTube into a distraction-free, whitelist-based learning space for kids.",
+  "description": "Unbinge turns YouTube into a distraction-free, whitelist-based learning space for learners.",
   "version": "1.0.0",
   "minimum_chrome_version": "116",
   "action": {

@@ -197,7 +197,7 @@ function renderFilters(): void {
         });
       });
 
-      wrapper.append(text, input);
+      wrapper.append(text , input);
       return wrapper;
     })
   );
