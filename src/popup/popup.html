@@ -40,8 +40,8 @@
           <input data-setting="educationModeEnabled" type="checkbox">
         </label>
         <!-- Ad Blocker hidden for v1 — feature disabled until it works reliably.
-             To re-enable: uncomment this block, restore updateAdBlocking() in
-             src/background/dnr.ts, and set adBlockEnabled: true in src/shared/defaults.ts.
+             To re-enable: add DNR permissions/rules back to the manifest,
+             wire the background DNR updater, and set adBlockEnabled: true.
         <label class="setting">
           <span>
             <strong>Ad Blocker</strong>
