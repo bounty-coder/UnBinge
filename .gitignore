@@ -30,4 +30,5 @@ npm-debug.log*
 
 # Website secrets configuration
 website/api/includes/config.php
+website/secrets.php
 
