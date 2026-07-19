@@ -14,6 +14,15 @@
 //    5. Save. Done. config.php will auto-load it.
 // ============================================================
 
+// Guard: block direct web access. This file should only ever be
+// require'd by config.php — never loaded in a browser. If someone
+// guesses the URL, they get a 403 instead of the source.
+if (php_sapi_name() !== 'cli' && !defined('UB_SECRETS_LOADED')) {
+    http_response_code(403);
+    exit('Forbidden');
+}
+define('UB_SECRETS_LOADED', true);
+
 // Database credentials (from Hostinger hPanel → Databases)
 define('SECRET_DB_HOST', 'localhost');
 define('SECRET_DB_NAME', 'u957077989_unbinge');
