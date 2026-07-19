@@ -15,11 +15,14 @@ export const DNR_RULESET_IDS = ["youtube_ads", "privacy_trackers", "site_blockli
 export const API_BASE_URL = "https://unbinge.watch";
 
 // EXT_API_KEY: must match API_KEY in website/api/includes/config.php
-// Generate a random 64-char string and paste the same value in both places.
-export const EXT_API_KEY = "d038e80a-3963-4f3c-b27d-fbb8f11340df";
+// Injected at build time from .env (VITE_EXT_API_KEY). Never hardcode here.
+// Generate a random UUID and paste the same value in .env and config.php.
+export const EXT_API_KEY = import.meta.env.VITE_EXT_API_KEY ?? "";
 
 // YouTube Data API key (still used for channel handle resolution)
-export const YOUTUBE_DATA_API_KEY = "AIzaSyBHAWc3HBdFN2msS4cc0bBF3TqVF_Ebl_U";
+// Injected at build time from .env (VITE_YOUTUBE_DATA_API_KEY).
+// TODO: proxy through PHP backend so this key isn't shipped to clients.
+export const YOUTUBE_DATA_API_KEY = import.meta.env.VITE_YOUTUBE_DATA_API_KEY ?? "";
 
 // ── Firebase (disabled — uncomment ALL lines in this block to switch back)
 // To revert: uncomment below, rename firebase.ts.bak → firebase.ts,
@@ -59,7 +62,7 @@ export function isBackendConfigured(): boolean {
 export function getBackendConfigurationError(): string | null {
   return isBackendConfigured()
     ? null
-    : "Set EXT_API_KEY in src/shared/constants.ts (must match API_KEY in website/api/includes/config.php).";
+    : "Set VITE_EXT_API_KEY in .env (must match API_KEY in website/api/includes/config.php). See .env.example.";
 }
 
 // Firebase config check (kept for rollback — uncomment when reverting to Firebase):
