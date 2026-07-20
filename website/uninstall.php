@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <a href="index.html" class="nav-brand">Un<span>binge</span></a>
   <div class="nav-links">
     <a href="index.html">Home</a>
-    <a href="install.html">Reinstall</a>
+    <a href="https://chromewebstore.google.com/detail/mcpapcjehehgkabkeimooegacbjgfcnk" class="nav-link" target="_blank" rel="noopener">Reinstall</a>
   </div>
 </nav>
 
@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   <?php if ($submitted): ?>
     <div style="margin-top:32px">
-      <a href="install.html" class="btn-primary">Reinstall Unbinge →</a>
+      <a href="https://chromewebstore.google.com/detail/mcpapcjehehgkabkeimooegacbjgfcnk" class="btn-primary" target="_blank" rel="noopener">Reinstall Unbinge →</a>
     </div>
   <?php else: ?>
 
@@ -104,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <!-- Reinstall CTA -->
   <div style="margin-top:36px;text-align:center">
     <p style="color:var(--muted);font-size:14px;margin-bottom:12px">Changed your mind?</p>
-    <a href="install.html" class="btn-outline">Reinstall Unbinge →</a>
+    <a href="https://chromewebstore.google.com/detail/mcpapcjehehgkabkeimooegacbjgfcnk" class="btn-outline" target="_blank" rel="noopener">Reinstall Unbinge →</a>
   </div>
 
   <?php endif; ?>
