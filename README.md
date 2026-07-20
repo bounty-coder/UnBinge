@@ -1,44 +1,54 @@
-# UnBinge Extension
+# Unbinge — Distraction-Free YouTube for Focus & Learning
 
-UnBinge is a browser extension designed to help users manage and control their streaming habits more effectively.  
-It integrates directly with supported platforms to provide reminders, usage tracking, and productivity‑focused features.
+Unbinge is a Chrome extension that transforms YouTube into a calm, focused, whitelist-only learning environment. Instead of fighting YouTube's recommendation algorithm, Unbinge removes the distractions entirely and only shows videos from channels you (or a parent/teacher) have explicitly approved.
 
----
-
-## 🚀 Current Status
-The extension has not yet been published on the Chrome Web Store.  
-It is currently **under review by the Chrome Extension team**.  
-
-Until it is published, you can still try it out manually.
-
----
-
-## 📦 Try It Out (Developer Mode)
-1. Download the ZIP file from this repository: **`unbinge-chrome-store.zip`**  
-2. Unzip the file to a folder on your computer.  
-3. Open your browser (Chrome, Edge, or any Chromium‑based browser).  
-4. Go to `chrome://extensions/` (or `edge://extensions/`).  
-5. Turn on **Developer Mode** (toggle in the top right).  
-6. Click **Load unpacked** and select the unzipped folder.  
-7. The extension will now be available in your browser.
+**Install from the Chrome Web Store:**  
+https://chromewebstore.google.com/detail/mcpapcjehehgkabkeimooegacbjgfcnk
 
 ---
 
 ## ✨ Features
-- Track and manage binge‑watching sessions
-- Set reminders and limits for streaming
-- Lightweight design, optimized for Chrome
-- Built with scalability in mind for long‑term use
+
+- **Whitelist-only YouTube** — only approved channels are visible; everything else is hidden at the page level (no thumbnails, titles, or previews).
+- **Comprehensive distraction blocking** — hides Shorts, recommended sidebar, home feed, trending, comments, end-screen suggestions, autoplay, live chat, and promotional elements (merch, tickets, fundraisers).
+- **Three profiles** — Kids (≤8), Teens (9-14), and Adult/Parent — each applying a sensible baseline of filters that users can fine-tune.
+- **Granular distraction settings** — individual toggles for each distraction type, with a master switch and reset-to-defaults.
+- **Channel-request & approval workflow** — add channels locally for instant access and submit them for global review.
+- **Whitelist synchronization** — manual sync plus automatic weekly background sync.
+- **Light & dark mode** — respects system preference, toggleable from the popup.
+- **Privacy-first** — all settings and approvals are stored locally; no personal data is collected or transmitted.
+
+---
+
+## 🚀 Install from the Chrome Web Store
+
+1. Visit the [Unbinge listing](https://chromewebstore.google.com/detail/mcpapcjehehgkabkeimooegacbjgfcnk).
+2. Click **Add to Chrome**.
+3. Confirm the permissions prompt.
+4. The onboarding page opens automatically — pick your profile and you're ready.
+
+---
+
+## 🧱 Tech Stack
+
+- **Chrome Extension** — Manifest V3, TypeScript, Vite
+- **Content scripts** — inject `unhook.css` at `document_start` to hide elements before they render
+- **Background** — service worker with `chrome.alarms`, `chrome.webNavigation`, `chrome.storage`, and `chrome.runtime` messaging
+- **Backend** — PHP/MySQL on Hostinger (channel requests, whitelist sync, feedback, admin moderation)
+- **Website** — `unbinge.watch` (privacy policy, terms, FAQ, contact, install guide)
 
 ---
 
 ## 📌 Roadmap
-- Publish on Chrome Web Store (in review)
-- Add support for Firefox and Edge
-- Expand backend beyond PHP for more flexibility
-- Continuous improvements based on user feedback
+
+- [x] Publish on Chrome Web Store
+- [ ] Add support for Edge and Firefox
+- [ ] Proxy YouTube Data API calls through the PHP backend (remove key from client bundle)
+- [ ] Expand the community-curated whitelist
+- [ ] Continuous improvements based on user feedback
 
 ---
 
 ## 📄 License
+
 This project is licensed under the MIT License.
